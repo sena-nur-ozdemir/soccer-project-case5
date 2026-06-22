@@ -1,0 +1,300 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GoalZone Yönetim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        :root {
+            /* GoalZone Dark Admin Paleti */
+            --sidebar-bg: #070b14;
+            --main-bg: #0b1120;
+            --card-bg: #151e32;
+            --border-color: #1e293b;
+            --brand-cyan: #00e5ff;
+            --brand-purple: #651fff;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            margin: 0;
+        }
+
+        /* ── SIDEBAR ── */
+        .admin-sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-color);
+            gap: 12px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+            .sidebar-brand i {
+                font-size: 1.5rem;
+                color: var(--brand-cyan);
+            }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 12px;
+            list-style: none;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .menu-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            margin-top: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+            .menu-item i {
+                font-size: 1.1rem;
+            }
+
+            .menu-item:hover {
+                background-color: rgba(255,255,255,0.05);
+                color: #fff;
+            }
+
+            .menu-item.active {
+                background: linear-gradient(90deg, rgba(0,229,255,0.1), transparent);
+                border-left: 3px solid var(--brand-cyan);
+                color: var(--brand-cyan);
+                font-weight: 600;
+            }
+
+        /* ── MAIN CONTENT AREA ── */
+        .main-wrapper {
+            margin-left: 260px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .admin-topbar {
+            height: 70px;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-left {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Belirginleşen Sezon Kutusu */
+        .season-tag {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--brand-cyan);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .topbar-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+            .topbar-link:hover {
+                color: #fff;
+            }
+
+        .logout-btn {
+            color: #ef4444;
+        }
+
+            .logout-btn:hover {
+                color: #f87171;
+            }
+
+        .content-container {
+            padding: 36px;
+            flex-grow: 1;
+        }
+
+        /* Koyu Temalı Kartlar */
+        .admin-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+        }
+
+        /* Form Elemanları (Koyu Tema) */
+        .form-control, .form-select {
+            background-color: #0b1120;
+            border: 1px solid var(--border-color);
+            color: #fff;
+        }
+
+            .form-control:focus, .form-select:focus {
+                background-color: #0b1120;
+                border-color: var(--brand-cyan);
+                color: #fff;
+                box-shadow: 0 0 0 0.25rem rgba(0, 229, 255, 0.25);
+            }
+
+        .form-label {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <a href="/Admin/Dashboard" class="sidebar-brand">
+            <i class="bi bi-bullseye"></i>
+            <span class="brand-name">GoalZone <span class="fw-light opacity-75">Admin</span></span>
+        </a>
+
+        <ul class="sidebar-menu">
+            <li class="menu-label">Ana Kontrol</li>
+            <li>
+                <a href="/Admin/Dashboard" class="menu-item @(ViewData["ActivePage"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i class="bi bi-grid-1x2"></i>
+                    <span>Genel Durum</span>
+                </a>
+            </li>
+
+            <li class="menu-label">Veri Girişi</li>
+            <li>
+                <a href="/Admin/CreateFixture" class="menu-item @(ViewData["ActivePage"]?.ToString() == "Fixtures" ? "active" : "")">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Fikstür Ekle</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Admin/CreateMatchEvent" class="menu-item @(ViewData["ActivePage"]?.ToString() == "Events" ? "active" : "")">
+                    <i class="bi bi-stopwatch"></i>
+                    <span>Olay Ekle</span>
+                </a>
+            </li>
+            <li>
+                <a href="/Admin/CreateMatchStatistics" class="menu-item @(ViewData["ActivePage"]?.ToString() == "Stats" ? "active" : "")">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>İstatistik Gir</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="admin-topbar">
+            <div class="topbar-left">@ViewData["Title"]</div>
+            <div class="topbar-right">
+                <div class="season-tag"><i class="bi bi-clock-history"></i> Sezon 2025/2026</div>
+                <span class="text-muted opacity-25">|</span>
+                <a href="/Default/Index/" class="topbar-link"><i class="bi bi-box-arrow-up-right me-1"></i>Siteyi Gör</a>
+                <span class="text-muted opacity-25">|</span>
+                <a href="#" class="topbar-link logout-btn"><i class="bi bi-box-arrow-right"></i> Çıkış</a>
+            </div>
+        </header>
+
+        <main class="content-container">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success bg-success bg-opacity-10 border border-success text-success p-3 rounded-3 mb-4 d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger bg-danger bg-opacity-10 border border-danger text-danger p-3 rounded-3 mb-4 d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

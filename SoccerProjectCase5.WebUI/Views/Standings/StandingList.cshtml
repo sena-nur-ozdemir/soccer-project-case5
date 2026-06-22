@@ -1,0 +1,580 @@
+﻿@using SoccerProjectCase5.WebUI.Dtos.StandingDtos
+@model List<StandingDto>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Puan Durumu — GoalZone Premier League</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0a0f1a;
+            --bg2: #0f172a;
+            --card: #1e293b;
+            --card2: #273449;
+            --elevated: #334155;
+            --primary: #00e5ff;
+            --secondary: #651fff;
+            --live: #ff1744;
+            --gold: #ffd600;
+            --yellow: #ffc107;
+            --red: #f44336;
+            --t1: #f8fafc;
+            --t2: #94a3b8;
+            --t3: #64748b;
+            --border: #334155;
+            --r1: 8px;
+            --r2: 12px;
+            --r3: 16px;
+            --tr: all .22s cubic-bezier(.4,0,.2,1);
+            --fd: 'Barlow Condensed',sans-serif;
+            --fb: 'Barlow',sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        html { scroll-behavior: smooth }
+        body {
+            font-family: var(--fb);
+            background: var(--bg);
+            color: var(--t1);
+            min-height: 100vh;
+            background-image: radial-gradient(ellipse at 15% 0%,rgba(101,31,255,.07) 0%,transparent 55%), radial-gradient(ellipse at 85% 0%,rgba(0,229,255,.04) 0%,transparent 50%)
+        }
+
+        ::-webkit-scrollbar { width: 5px }
+        ::-webkit-scrollbar-track { background: var(--bg) }
+        ::-webkit-scrollbar-thumb { background: var(--elevated); border-radius: 3px }
+        a { text-decoration: none; color: inherit }
+        img { display: block }
+
+        /* ── NAVBAR ── */
+        .nb {
+            background: rgba(10,15,26,.96);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 24px rgba(0,0,0,.5)
+        }
+
+        .nb-inner {
+            max-width: 1120px; margin: 0 auto; padding: 0 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px
+        }
+
+        .brand { display: flex; align-items: center; gap: 10px; padding: 14px 0 }
+        .brand-ico {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg,var(--primary),var(--secondary));
+            border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 17px
+        }
+
+        .brand-txt { font-family: var(--fd); font-size: 21px; font-weight: 800; letter-spacing: 1px }
+        .brand-txt span { color: var(--primary) }
+        .nav-links { display: flex }
+        .nl {
+            font-family: var(--fd); font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--t2); padding: 22px 15px; position: relative; transition: var(--tr)
+        }
+
+        .nl::after {
+            content: ''; position: absolute; bottom: 0; left: 15px; right: 15px; height: 2px;
+            background: var(--primary); transform: scaleX(0); transition: var(--tr)
+        }
+
+        .nl:hover, .nl.active { color: var(--t1) }
+        .nl:hover::after, .nl.active::after { transform: scaleX(1) }
+        .nb-icons { display: flex; align-items: center; gap: 5px }
+        .ico-btn {
+            width: 36px; height: 36px; background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--r1); color: var(--t2); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: var(--tr)
+        }
+
+        .ico-btn:hover { background: var(--elevated); color: var(--t1); border-color: var(--secondary) }
+        .tog {
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--r1);
+            padding: 7px 9px; color: var(--t1); cursor: pointer; line-height: 1
+        }
+
+        .mob-menu { max-height: 0; overflow: hidden; transition: max-height .3s ease }
+        .mob-menu.open { max-height: 320px }
+        .mob-menu .nl { padding: 14px 0; border-bottom: 1px solid var(--border); display: block }
+        .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px }
+
+        /* ── PAGE HEADER ── */
+        .pg-head {
+            background: linear-gradient(135deg,var(--bg2),var(--card));
+            border-bottom: 1px solid var(--border); padding: 32px 0 24px; position: relative; overflow: hidden
+        }
+
+        .pg-head::before {
+            content: ''; position: absolute; top: -40%; right: -5%; width: 380px; height: 380px;
+            background: radial-gradient(circle,rgba(0,229,255,.05) 0%,transparent 70%); pointer-events: none
+        }
+
+        .pg-badge {
+            display: inline-flex; align-items: center; gap: 7px; background: rgba(255,214,0,.09);
+            border: 1px solid rgba(255,214,0,.22); border-radius: 20px; padding: 4px 12px;
+            font-family: var(--fd); font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--gold); text-transform: uppercase; margin-bottom: 10px
+        }
+
+        .pg-title { font-family: var(--fd); font-size: clamp(26px,5vw,42px); font-weight: 900; letter-spacing: .5px; line-height: 1 }
+        .pg-sub { font-size: 13px; color: var(--t2); margin-top: 6px }
+
+        /* ── LEGEND BADGES ── */
+        .legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap }
+        .leg-item {
+            display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--t2);
+            background: var(--card); border: 1px solid var(--border); padding: 5px 10px; border-radius: 7px
+        }
+        .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0 }
+        .tbl-wrap { padding: 28px 0 56px }
+
+        /* ── ZONE LABELS ── */
+        .zone-lbl {
+            font-family: var(--fd); font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--t3); padding: 12px 0 6px; border-top: 1px solid var(--border); margin-top: 4px
+        }
+
+        /* ── STANDINGS TABLE ── */
+        .std-table { width: 100%; border-collapse: separate; border-spacing: 0 4px }
+        .std-table thead th {
+            font-family: var(--fd); font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--t3); padding: 6px 10px; text-align: center; border: none
+        }
+        .std-table thead th.team-col { text-align: left; padding-left: 14px }
+        .std-row { background: var(--card); transition: var(--tr); cursor: pointer }
+        .std-row:hover { background: var(--card2); transform: translateX(3px); border-left: 2px solid var(--primary); }
+        .std-row td { padding: 11px 10px; text-align: center; border: none; vertical-align: middle }
+        .std-row td:first-child { border-radius: var(--r1) 0 0 var(--r1); padding-left: 0 }
+        .std-row td:last-child { border-radius: 0 var(--r1) var(--r1) 0 }
+
+        .pos-strip { width: 4px; height: 42px; border-radius: 2px 0 0 2px; flex-shrink: 0 }
+        .pos-cell { display: flex; align-items: center; gap: 0; padding: 0 }
+        .pos-num { font-family: var(--fd); font-size: 16px; font-weight: 800; color: var(--t2); width: 38px; text-align: center }
+        .pos-num.top1 { color: var(--gold) }
+        .pos-num.top4 { color: var(--primary) }
+        .pos-num.euro { color: var(--secondary) }
+        .pos-num.rel { color: var(--live) }
+
+        .team-cell { display: flex; align-items: center; gap: 10px; text-align: left; min-width: 160px }
+        .t-logo {
+            width: 28px; height: 28px; border-radius: 50%; background: var(--elevated);
+            border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+            font-family: var(--fd); font-size: 9px; font-weight: 800; color: var(--t2); overflow: hidden; flex-shrink: 0
+        }
+        .t-logo img { width: 100%; height: 100%; object-fit: contain; padding: 3px }
+        .t-name { font-family: var(--fd); font-size: 15px; font-weight: 700 }
+        .t-name .t-short { display: none; font-size: 14px }
+
+        .std-row .s-mp { font-family: var(--fd); font-size: 14px; font-weight: 600; color: var(--t2) }
+        .std-row .s-w { font-family: var(--fd); font-size: 14px; font-weight: 700; color: var(--primary) }
+        .std-row .s-d { font-family: var(--fd); font-size: 14px; font-weight: 700; color: var(--t2) }
+        .std-row .s-l { font-family: var(--fd); font-size: 14px; font-weight: 700; color: var(--live) }
+        .std-row .s-gf, .std-row .s-ga { font-family: var(--fd); font-size: 14px; font-weight: 600; color: var(--t1) }
+        .std-row .s-gd { font-family: var(--fd); font-size: 14px; font-weight: 700 }
+        .s-gd.pos { color: var(--primary) }
+        .s-gd.neg { color: var(--live) }
+        .s-gd.zero { color: var(--t3) }
+        .s-pts { font-family: var(--fd); font-size: 18px; font-weight: 900; color: var(--t1) }
+        .pts-top { color: var(--gold) !important }
+
+        /* form pills */
+        .form-row { display: flex; gap: 3px; justify-content: center }
+        .fp {
+            width: 18px; height: 18px; border-radius: 4px; font-family: var(--fd); font-size: 10px;
+            font-weight: 800; display: flex; align-items: center; justify-content: center; line-height: 1
+        }
+        .fp-w { background: rgba(0,229,255,.18); color: var(--primary) }
+        .fp-d { background: rgba(148,163,184,.12); color: var(--t2) }
+        .fp-l { background: rgba(255,23,68,.14); color: var(--live) }
+
+        .cl-champ { background: rgba(255,214,0,.7) }
+        .cl-ucl { background: var(--primary) }
+        .cl-uel { background: var(--secondary) }
+        .cl-uecl { background: #00bcd4 }
+        .cl-rel { background: var(--live) }
+        .cl-none { background: transparent }
+
+        /* ── TOP STATS CARDS ── */
+        .top-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px }
+        .ts-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--r2);
+            padding: 18px; display: flex; flex-direction: column; gap: 4px
+        }
+        .ts-label { font-family: var(--fd); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--t3) }
+        .ts-val { font-family: var(--fd); font-size: 28px; font-weight: 900; line-height: 1 }
+        .ts-team { font-size: 12px; color: var(--t2); margin-top: 2px }
+
+        /* ── FOOTER ── */
+        .ft { background: var(--bg2); border-top: 1px solid var(--border); padding: 44px 0 22px; margin-top: 0 }
+        .ft-brand { font-family: var(--fd); font-size: 20px; font-weight: 800; margin-bottom: 8px }
+        .ft-brand span { color: var(--primary) }
+        .ft-desc { font-size: 12px; color: var(--t3); line-height: 1.7; max-width: 240px }
+        .ft-h { font-family: var(--fd); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--t2); margin-bottom: 14px }
+        .ft-ul { list-style: none; padding: 0 }
+        .ft-ul li { margin-bottom: 7px }
+        .ft-ul a { color: var(--t3); font-size: 12px; transition: var(--tr) }
+        .ft-ul a:hover { color: var(--t1) }
+        .si-row { display: flex; gap: 7px; margin-top: 14px }
+        .si {
+            width: 34px; height: 34px; background: var(--card); border: 1px solid var(--border);
+            border-radius: var(--r1); display: flex; align-items: center; justify-content: center; color: var(--t3); transition: var(--tr); font-size: 13px
+        }
+        .si:hover { background: var(--elevated); color: var(--primary); border-color: var(--primary) }
+        .ft-bot { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 32px; font-size: 11px; color: var(--t3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px }
+
+        @@media(max-width:900px) {
+            .hide-md { display: none !important }
+            .t-name span.t-full { display: none }
+            .t-name .t-short { display: inline }
+            .top-stats { grid-template-columns: repeat(2,1fr) }
+        }
+        @@media(max-width:600px) {
+            .hide-sm { display: none !important }
+            .top-stats { grid-template-columns: repeat(2,1fr); gap: 8px }
+            .ts-val { font-size: 22px }
+            .std-row .s-pts { font-size: 15px }
+            .pos-num { width: 28px; font-size: 14px }
+            .team-cell { min-width: 120px; gap: 7px }
+            .t-logo { width: 22px; height: 22px }
+            .t-name .t-short { font-size: 12px }
+            .fp { width: 15px; height: 15px; font-size: 9px }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="nb">
+        <div class="nb-inner">
+            <a href="/Default/Index/" class="brand">
+                <div class="brand-ico">⚽</div>
+                <span class="brand-txt">Goal<span>Zone</span></span>
+            </a>
+            <div class="nav-links d-none d-lg-flex">
+                <a href="/Default/Index/" class="nl">Ana Sayfa</a>
+                <a href="#" class="nl">Canlı Skorlar</a>
+                <a href="/Fixture/Index/" class="nl">Fikstür</a>
+                <a href="/Standings/StandingList/" class="nl active">Puan Durumu</a>
+                <a href="#" class="nl">Ligler</a>
+            </div>
+            <div class="nb-icons">
+                <a href="#" class="ico-btn d-none d-sm-flex"><i class="bi bi-search"></i></a>
+                <a href="#" class="ico-btn d-none d-sm-flex"><i class="bi bi-bell"></i></a>
+                <a href="#" class="ico-btn"><i class="bi bi-person"></i></a>
+                <button class="tog d-lg-none" id="tog"><i class="bi bi-list"></i></button>
+            </div>
+        </div>
+        <div class="mob-menu" id="mobMenu">
+            <div class="wrap">
+                <a href="/Default/Index/" class="nl d-block">Ana Sayfa</a>
+                <a href="#" class="nl d-block">Canlı Skorlar</a>
+                <a href="/Fixture/Index/" class="nl d-block">Fikstür</a>
+                <a href="/Standings/StandingList/" class="nl d-block active">Puan Durumu</a>
+                <a href="#" class="nl d-block">Ligler</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="pg-head">
+        <div class="wrap">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="pg-badge"><i class="bi bi-trophy-fill"></i> Premier League</div>
+                    <h1 class="pg-title">Puan <span style="color:var(--primary)">Durumu</span></h1>
+                    <p class="pg-sub">Sezon Heyecanı &nbsp;·&nbsp; Güncel Sıralama</p>
+                </div>
+                <div class="col-lg-4 mt-3 mt-lg-0">
+                    <div class="legend">
+                        <div class="leg-item"><div class="leg-dot" style="background:rgba(255,214,0,.8)"></div>Lider</div>
+                        <div class="leg-item"><div class="leg-dot" style="background:var(--primary)"></div>Şampiyonlar Ligi</div>
+                        <div class="leg-item"><div class="leg-dot" style="background:var(--secondary)"></div>Avrupa Ligi</div>
+                        <div class="leg-item"><div class="leg-dot" style="background:var(--live)"></div>Küme Düşme</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN -->
+    <main>
+        <div class="wrap">
+            <div class="tbl-wrap">
+
+                <!-- TOP STAT CARDS -->
+                <div class="top-stats">
+                    <div class="ts-card">
+                        <div class="ts-label">Lider Takım</div>
+                        <div class="ts-val" style="color:var(--gold)">-</div>
+                        <div class="ts-team">Veri bekleniyor</div>
+                    </div>
+                    <div class="ts-card">
+                        <div class="ts-label">En Çok Gol</div>
+                        <div class="ts-val" style="color:var(--primary)">-</div>
+                        <div class="ts-team">Veri bekleniyor</div>
+                    </div>
+                    <div class="ts-card">
+                        <div class="ts-label">En Az Yenilen</div>
+                        <div class="ts-val" style="color:var(--secondary)">-</div>
+                        <div class="ts-team">Veri bekleniyor</div>
+                    </div>
+                    <div class="ts-card">
+                        <div class="ts-label">Haftanın Maçı</div>
+                        <div class="ts-val" style="color:var(--t1);font-size:16px;margin-top:2px">Fikstürden Seçilecek</div>
+                        <div class="ts-team">Stadyum Bilgisi</div>
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div style="overflow-x:auto;border-radius:var(--r3);border:1px solid var(--border)">
+                    <table class="std-table" style="min-width:620px">
+                        <thead>
+                            <tr>
+                                <th style="width:4px;padding:0"></th>
+                                <th style="width:44px">#</th>
+                                <th class="team-col">Takım</th>
+                                <th>O</th>
+                                <th>G</th>
+                                <th>B</th>
+                                <th>M</th>
+                                <th class="hide-sm">AG</th>
+                                <th class="hide-sm">YG</th>
+                                <th>AV</th>
+                                <th>Son 5</th>
+                                <th>P</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="ft">
+        <div class="wrap">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="ft-brand">Goal<span>Zone</span></div>
+                    <p class="ft-desc">Futbol liglerinin canlı skorları, maç analizleri ve istatistikleri için tek adres.</p>
+                    <div class="si-row">
+                        <a href="#" class="si"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="si"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="si"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="si"><i class="bi bi-telegram"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="ft-h">Ligler</div>
+                    <ul class="ft-ul">
+                        <li><a href="#">Premier League</a></li>
+                        <li><a href="#">La Liga</a></li>
+                        <li><a href="#">Bundesliga</a></li>
+                        <li><a href="#">Serie A</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="ft-h">Hızlı Erişim</div>
+                    <ul class="ft-ul">
+                        <li><a href="/Default/Index/">Haftalık Skorlar</a></li>
+                        <li><a href="/Fixture/Index/">Fikstür</a></li>
+                        <li><a href="/Standings/StandingList/">Puan Durumu</a></li>
+                        <li><a href="#">Gol Krallığı</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="ft-h">Takımlar</div>
+                    <ul class="ft-ul">
+                        <li><a href="#">Arsenal</a></li>
+                        <li><a href="#">Liverpool</a></li>
+                        <li><a href="#">Man City</a></li>
+                        <li><a href="#">Chelsea</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="ft-h">Destek</div>
+                    <ul class="ft-ul">
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Gizlilik</a></li>
+                        <li><a href="#">Kullanım Şartları</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ft-bot">
+                <span>© 2026 GoalZone. Tüm hakları saklıdır.</span>
+                <span>Proje verileri test amaçlıdır.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ── DATA ──
+        const teams = @Html.Raw(Json.Serialize(Model.Select((t, i) => new {
+            pos       = i + 1,
+            name      = t.TeamName, 
+            shortName = t.ShortName,
+            logo      = t.LogoUrl,
+            mp        = t.MatchesPlayed,
+            w         = t.Wins,
+            d         = t.Draws,
+            l         = t.Losses,
+            gf        = t.GoalsFor,
+            ga        = t.GoalsAgainst,
+            gd        = t.GoalDifference,
+            pts       = t.Points,
+            form      = t.Form,
+            zone      = i == 0 ? "champ"
+                        : i <= 3 ? "ucl"
+                        : i <= 5 ? "uel"
+                        : i >= 17 ? "rel"
+                        : "none"
+        })));
+
+        const zoneColors = {
+          champ:'cl-champ', ucl:'cl-ucl', uel:'cl-uel', uecl:'cl-uecl', rel:'cl-rel', none:'cl-none'
+        };
+
+        const formMap = { G:'fp-w', B:'fp-d', M:'fp-l' };
+        const posColors = { champ:'top1', ucl:'top4', uel:'euro', rel:'rel', none:'' };
+
+        function renderTable() {
+          const tbody = document.getElementById('tableBody');
+          let html = '';
+
+          if (!teams || teams.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="12" style="padding:20px; color:var(--t3);">Henüz puan durumuna eklenecek bir maç oynanmadı.</td></tr>';
+              return;
+          }
+
+          teams.forEach((t, i) => {
+            const gd = t.gf - t.ga;
+            const gdStr = gd > 0 ? '+' + gd : gd;
+            const gdClass = gd > 0 ? 'pos' : gd < 0 ? 'neg' : 'zero';
+            const posClass = posColors[t.zone] || '';
+            const zClass = zoneColors[t.zone] || 'cl-none';
+            const isPtsTop = t.zone === 'champ';
+
+            let sectionLabel = '';
+            if (i === 0) sectionLabel = `<tr><td colspan="12"><div class="zone-lbl" style="color:var(--primary)">🏆 &nbsp;Şampiyonlar Ligi Hattı (1–4)</div></td></tr>`;
+            if (i === 4) sectionLabel = `<tr><td colspan="12"><div class="zone-lbl" style="color:var(--secondary)">🔵 &nbsp;Avrupa Ligi Hattı (5–6)</div></td></tr>`;
+            if (i === 6) sectionLabel = `<tr><td colspan="12"><div class="zone-lbl">— &nbsp;Orta Sıralar (7–17)</div></td></tr>`;
+            if (i === 17) sectionLabel = `<tr><td colspan="12"><div class="zone-lbl" style="color:var(--live)">🔴 &nbsp;Küme Düşme Hattı (18–20)</div></td></tr>`;
+
+            const formPills = t.form.map(f =>
+              `<div class="fp ${formMap[f]}">${f}</div>`
+            ).join('');
+
+            html += sectionLabel;
+            html += `
+            <tr class="std-row" title="${t.name}">
+              <td style="padding:0;width:4px">
+                <div class="pos-strip ${zClass}" style="height:44px;border-radius:var(--r1) 0 0 var(--r1)"></div>
+              </td>
+              <td><span class="pos-num ${posClass}">${t.pos}</span></td>
+              <td>
+                <div class="team-cell">
+                  <div class="t-logo">
+                    <img src="${t.logo}" alt="${t.shortName}" onerror="this.parentNode.textContent='${t.shortName}'"/>
+                  </div>
+                  <div class="t-name">
+                    <span class="t-full">${t.name}</span>
+                    <span class="t-short">${t.shortName}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="s-mp">${t.mp}</td>
+              <td class="s-w">${t.w}</td>
+              <td class="s-d">${t.d}</td>
+              <td class="s-l">${t.l}</td>
+              <td class="s-gf hide-sm">${t.gf}</td>
+              <td class="s-ga hide-sm">${t.ga}</td>
+              <td class="s-gd ${gdClass}">${gdStr}</td>
+              <td><div class="form-row">${formPills}</div></td>
+              <td class="s-pts ${isPtsTop ? 'pts-top' : ''}">${t.pts}</td>
+            </tr>`;
+          });
+
+          tbody.innerHTML = html;
+        }
+
+        // Mobile nav
+        const tog = document.getElementById('tog');
+        const mob = document.getElementById('mobMenu');
+        tog.addEventListener('click', () => {
+          mob.classList.toggle('open');
+          tog.innerHTML = mob.classList.contains('open')
+            ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+        });
+
+        // Navbar shadow
+        window.addEventListener('scroll', () => {
+          document.querySelector('.nb').style.boxShadow =
+            window.scrollY > 8 ? '0 4px 32px rgba(0,0,0,.7)' : '0 2px 24px rgba(0,0,0,.5)';
+        });
+
+        function animateRows() {
+          const rows = document.querySelectorAll('.std-row');
+          rows.forEach((r, i) => {
+            r.style.opacity = '0';
+            r.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+              r.style.transition = 'opacity .3s ease, transform .3s ease';
+              r.style.opacity = '1';
+              r.style.transform = 'translateY(0)';
+            }, 30 + i * 28);
+          });
+        }
+
+        renderTable();
+        animateRows();
+
+        // ÇÖKME KORUMASI: Veritabanında takım varsa kartları doldur, yoksa boş bırak
+        if (teams && teams.length > 0) {
+            const leader = teams[0];
+            document.querySelector('.ts-card:nth-child(1) .ts-val').textContent = leader.shortName;
+            document.querySelector('.ts-card:nth-child(1) .ts-team').textContent = leader.name + ' · ' + leader.pts + ' puan';
+
+            const mostGoals = [...teams].sort((a,b) => b.gf - a.gf)[0];
+            document.querySelector('.ts-card:nth-child(2) .ts-val').textContent = mostGoals.gf;
+            document.querySelector('.ts-card:nth-child(2) .ts-team').textContent = mostGoals.name;
+
+            const leastConceded = [...teams].sort((a,b) => a.ga - b.ga)[0];
+            document.querySelector('.ts-card:nth-child(3) .ts-val').textContent = leastConceded.ga;
+            document.querySelector('.ts-card:nth-child(3) .ts-team').textContent = leastConceded.name;
+            
+            // HAFTANIN MAÇI: Lider ve İkinci takımı eşleştirip ekrana basıyoruz.
+            if(teams.length > 1){
+                const team1 = teams[0]; 
+                const team2 = teams[1]; 
+                
+                const valEl = document.querySelector('.ts-card:nth-child(4) .ts-val');
+                const teamEl = document.querySelector('.ts-card:nth-child(4) .ts-team');
+
+                valEl.textContent = team1.shortName + ' v ' + team2.shortName;
+                
+                // Tasarım Düzeltmesi: Uzun metin olduğu için 22px ve hafif harf aralığı çok daha şık durur
+                valEl.style.color = 'var(--t1)';
+                valEl.style.fontSize = '22px'; 
+                valEl.style.letterSpacing = '1px';
+                
+                // İstenmeyen puan kısmı silindi, sadece temiz bir başlık kaldı
+                teamEl.textContent = 'Zirve Mücadelesi';
+            }
+
+        }
+    </script>
+</body>
+</html>

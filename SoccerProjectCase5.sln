@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoccerProjectCase5.WebApi", "SoccerProjectCase5.WebApi\SoccerProjectCase5.WebApi.csproj", "{591EA6EB-D3D4-49EA-9442-3A17D48CB6AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoccerProjectCase5.WebUI", "SoccerProjectCase5.WebUI\SoccerProjectCase5.WebUI.csproj", "{682ECB37-1850-420E-8C8B-C8FA083AA1FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{591EA6EB-D3D4-49EA-9442-3A17D48CB6AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591EA6EB-D3D4-49EA-9442-3A17D48CB6AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591EA6EB-D3D4-49EA-9442-3A17D48CB6AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591EA6EB-D3D4-49EA-9442-3A17D48CB6AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682ECB37-1850-420E-8C8B-C8FA083AA1FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682ECB37-1850-420E-8C8B-C8FA083AA1FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682ECB37-1850-420E-8C8B-C8FA083AA1FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682ECB37-1850-420E-8C8B-C8FA083AA1FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15E7BA94-BE7F-4AB2-91F1-E370B7A74D11}
+	EndGlobalSection
+EndGlobal

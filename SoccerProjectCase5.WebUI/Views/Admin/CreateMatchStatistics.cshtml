@@ -1,0 +1,164 @@
+﻿@using SoccerProjectCase5.WebUI.Dtos.MatchStatisticDtos
+@model CreateMatchStatisticDto
+
+@{
+    ViewData["Title"] = "İstatistik Raporla";
+    ViewData["ActivePage"] = "Stats";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+    <i class="bi bi-graph-up-arrow fs-2 text-success me-3"></i>
+    <div>
+        <h4 class="fw-bold mb-0 text-white">Maç Sonu İstatistikleri</h4>
+        <p class="small mb-0" style="color: #94a3b8;">Seçili müsabakaya ait teknik ve disiplin verilerini kapsüller halinde sisteme işleyin.</p>
+    </div>
+</div>
+
+<div class="admin-card border border-secondary border-opacity-25 shadow-sm p-4 p-md-5 rounded-4" style="background-color: #151e32;">
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- MAÇ SEÇİM KUTUSU -->
+        <div class="row justify-content-center mb-5 pb-4 border-bottom border-secondary border-opacity-25">
+            <div class="col-md-8 text-center">
+                <label asp-for="FixtureId" class="form-label fw-bold fs-5 text-white mb-3 text-uppercase letter-spacing-1">İstatistik Girilecek Maçı Seçin</label>
+                <select asp-for="FixtureId" asp-items="ViewBag.Fixtures" class="form-select form-select-lg py-3 text-center border-success text-white shadow-sm fw-bold" style="background-color: #0b1120;">
+                    <option value="">— Lütfen Listeden Bir Karşılaşma Seçiniz —</option>
+                </select>
+                <span asp-validation-for="FixtureId" class="text-danger small mt-2 d-block"></span>
+            </div>
+        </div>
+
+        <!-- EVS / DEP SABİT KILAVUZ SATIRI -->
+        <div class="row mb-4 text-center fw-bold fs-6 pb-2">
+            <div class="col-4 text-info text-uppercase letter-spacing-1"><i class="bi bi-house-door-fill me-1.5"></i> Ev Sahibi</div>
+            <div class="col-4 text-muted text-uppercase small letter-spacing-2">Kapsül / Metrik</div>
+            <div class="col-4 text-warning text-uppercase letter-spacing-1">Deplasman <i class="bi bi-airplane-fill ms-1.5"></i></div>
+        </div>
+
+        <!-- 1. KAPSÜL: TOP HAKİMİYETİ (Turkuaz) -->
+        <div class="p-4 rounded-4 mb-4 border border-secondary border-opacity-25 shadow-sm" style="background-color: #0b1120;">
+            <div class="d-flex align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                <span class="badge bg-info bg-opacity-10 text-info p-2.5 me-3 rounded-3"><i class="bi bi-pie-chart-fill fs-5"></i></span>
+                <h6 class="fw-bold text-white m-0 text-uppercase letter-spacing-1">Top Hakimiyeti</h6>
+            </div>
+            <div class="row align-items-center text-center">
+                <div class="col-4">
+                    <input asp-for="PossessionHome" type="number" min="0" max="100" class="form-control py-2.5 bg-dark text-white border-info text-center fw-bold fs-5" placeholder="%" />
+                    <span asp-validation-for="PossessionHome" class="text-danger small"></span>
+                </div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #cbd5e1;">Topla Oynama <span class="text-info fw-normal">(%)</span></div>
+                <div class="col-4">
+                    <input asp-for="PossessionAway" type="number" min="0" max="100" class="form-control py-2.5 bg-dark text-white border-warning text-center fw-bold fs-5" placeholder="%" />
+                    <span asp-validation-for="PossessionAway" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. KAPSÜL: HÜCUM & ŞUTLAR (Yeşil) -->
+        <div class="p-4 rounded-4 mb-4 border border-secondary border-opacity-25 shadow-sm" style="background-color: #0b1120;">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                <span class="badge bg-success bg-opacity-10 text-success p-2.5 me-3 rounded-3"><i class="bi bi-crosshair fs-5"></i></span>
+                <h6 class="fw-bold text-white m-0 text-uppercase letter-spacing-1">Hücum & Şut Performansı</h6>
+            </div>
+            <div class="row align-items-center text-center mb-3">
+                <div class="col-4"><input asp-for="ShotsHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #cbd5e1;">Toplam Şut</div>
+                <div class="col-4"><input asp-for="ShotsAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+            </div>
+            <div class="row align-items-center text-center pt-2">
+                <div class="col-4"><input asp-for="ShotsOnTargetHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-success border-opacity-50 text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold text-success">İsabetli Şut</div>
+                <div class="col-4"><input asp-for="ShotsOnTargetAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-success border-opacity-50 text-center fw-bold" placeholder="0" /></div>
+            </div>
+        </div>
+
+        <!-- 3. KAPSÜL: PAS ORGANİZASYONU (Mor) -->
+        <div class="p-4 rounded-4 mb-4 border border-secondary border-opacity-25 shadow-sm" style="background-color: #0b1120;">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                <span class="badge bg-primary bg-opacity-10 text-primary p-2.5 me-3 rounded-3" style="color: #a78bfa !important;"><i class="bi bi-diagram-3-fill fs-5"></i></span>
+                <h6 class="fw-bold text-white m-0 text-uppercase letter-spacing-1">Pas Organizasyonu</h6>
+            </div>
+            <div class="row align-items-center text-center mb-3">
+                <div class="col-4"><input asp-for="PassesHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #cbd5e1;">Toplam Pas</div>
+                <div class="col-4"><input asp-for="PassesAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+            </div>
+            <div class="row align-items-center text-center pt-2">
+                <div class="col-4"><input asp-for="PassAccuracyHome" type="number" min="0" max="100" class="form-control py-2 bg-dark text-white border-primary border-opacity-50 text-center fw-bold" placeholder="%" /></div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #a78bfa;">Pas İsabeti (%)</div>
+                <div class="col-4"><input asp-for="PassAccuracyAway" type="number" min="0" max="100" class="form-control py-2 bg-dark text-white border-primary border-opacity-50 text-center fw-bold" placeholder="%" /></div>
+            </div>
+        </div>
+
+        <!-- 4. KAPSÜL: OYUN AKIŞI & DURAN TOP (Sarı) -->
+        <div class="p-4 rounded-4 mb-4 border border-secondary border-opacity-25 shadow-sm" style="background-color: #0b1120;">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                <span class="badge bg-warning bg-opacity-10 text-warning p-2.5 me-3 rounded-3"><i class="bi bi-flag-fill fs-5"></i></span>
+                <h6 class="fw-bold text-white m-0 text-uppercase letter-spacing-1">Duran Top & Mücadele Akışı</h6>
+            </div>
+            <div class="row align-items-center text-center mb-3">
+                <div class="col-4"><input asp-for="CornersHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #cbd5e1;">Korner Sayısı</div>
+                <div class="col-4"><input asp-for="CornersAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+            </div>
+            <div class="row align-items-center text-center mb-3 pt-1">
+                <div class="col-4"><input asp-for="FoulsHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold" style="color: #cbd5e1;">Yapılan Faul</div>
+                <div class="col-4"><input asp-for="FoulsAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+            </div>
+            <div class="row align-items-center text-center pt-1">
+                <div class="col-4"><input asp-for="OffsidesHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold text-warning">Ofsayt</div>
+                <div class="col-4"><input asp-for="OffsidesAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-secondary text-center fw-bold" placeholder="0" /></div>
+            </div>
+        </div>
+
+        <!-- 5. KAPSÜL: DİSİPLİN RAPORU (Kırmızı) -->
+        <div class="p-4 rounded-4 mb-5 border border-danger border-opacity-25 shadow-sm" style="background-color: rgba(255, 23, 68, 0.03);">
+            <div class="d-flex align-items-center mb-4 pb-2 border-bottom border-danger border-opacity-25">
+                <span class="badge bg-danger bg-opacity-10 text-danger p-2.5 me-3 rounded-3"><i class="bi bi-shield-exclamation fs-5"></i></span>
+                <h6 class="fw-bold text-danger m-0 text-uppercase letter-spacing-1">Disiplin Raporu (Kartlar)</h6>
+            </div>
+            <div class="row align-items-center text-center mb-3">
+                <div class="col-4"><input asp-for="YellowCardsHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-warning text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold text-warning">Sarı Kart</div>
+                <div class="col-4"><input asp-for="YellowCardsAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-warning text-center fw-bold" placeholder="0" /></div>
+            </div>
+            <div class="row align-items-center text-center pt-1">
+                <div class="col-4"><input asp-for="RedCardsHome" type="number" min="0" class="form-control py-2 bg-dark text-white border-danger text-center fw-bold" placeholder="0" /></div>
+                <div class="col-4 small text-uppercase fw-bold text-danger">Kırmızı Kart</div>
+                <div class="col-4"><input asp-for="RedCardsAway" type="number" min="0" class="form-control py-2 bg-dark text-white border-danger text-center fw-bold" placeholder="0" /></div>
+            </div>
+        </div>
+
+        <!-- KAYDET BUTONU -->
+        <div class="d-flex justify-content-end gap-3 pt-3 border-top border-secondary border-opacity-25">
+            <a href="/Admin/Dashboard" class="btn btn-outline-light px-4 py-2.5 fw-medium">İptal</a>
+            <button type="submit" class="btn btn-success px-5 py-2.5 fw-bold text-white shadow">
+                <i class="bi bi-cloud-upload-fill me-2 fs-5 align-middle"></i> İstatistikleri Veritabanına İşle
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        // Topla oynama %100 otomatik tamamlama algoritması (Mükemmel çalışıyor, dokunmadık)
+        const homePoss = document.querySelector('[name="PossessionHome"]');
+        const awayPoss = document.querySelector('[name="PossessionAway"]');
+
+        homePoss.addEventListener('change', () => {
+            if (homePoss.value && !awayPoss.value) {
+                awayPoss.value = 100 - parseInt(homePoss.value);
+            }
+        });
+        awayPoss.addEventListener('change', () => {
+            if (awayPoss.value && !homePoss.value) {
+                homePoss.value = 100 - parseInt(awayPoss.value);
+            }
+        });
+    </script>
+}

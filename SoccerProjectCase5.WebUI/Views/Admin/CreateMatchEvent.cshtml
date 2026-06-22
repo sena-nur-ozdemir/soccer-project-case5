@@ -1,0 +1,178 @@
+﻿@using SoccerProjectCase5.WebUI.Dtos.MatchEventDtos
+@model CreateMatchEventDto
+
+@{
+    ViewData["Title"] = "Maç Olayı Ekle";
+    ViewData["ActivePage"] = "Events";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-25">
+    <i class="bi bi-stopwatch fs-2 text-warning me-3"></i>
+    <div>
+        <h4 class="fw-bold mb-0 text-white">Maç Olayı Ekle</h4>
+        <p class="small mb-0" style="color: #94a3b8;">Seçili maça gol, sarı/kırmızı kart, oyuncu değişikliği gibi aksiyonları tanımlayın.</p>
+    </div>
+</div>
+
+<!-- İÇ BAŞLIKLI MODERN KART MİMARİSİ -->
+<div class="admin-card border border-secondary border-opacity-25 shadow-sm rounded-4 overflow-hidden p-0" style="background-color: #151e32;">
+
+    <!-- Kartın Kendi İç Başlığı (Arkadaşınınki gibi ama jilet versiyonu) -->
+    <div class="p-4 border-bottom border-secondary border-opacity-25 d-flex align-items-center gap-3" style="background-color: #0b1120;">
+        <div class="bg-warning bg-opacity-10 p-3 rounded-3 text-warning d-flex align-items-center justify-content-center shadow-inner">
+            <i class="bi bi-lightning-charge-fill fs-5"></i>
+        </div>
+        <div>
+            <h5 class="fw-bold text-white mb-1">Aksiyon Detayları</h5>
+            <p class="small mb-0" style="color: #64748b;">Müsabaka ve gerçekleşen olayın tüm parametrelerini eksiksiz giriniz</p>
+        </div>
+    </div>
+
+    <!-- Form Gövdesi -->
+    <div class="p-4 p-md-5">
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <h6 class="fw-bold text-uppercase mb-3 text-warning" style="letter-spacing: 0.5px; font-size: 0.8rem;">1. Müsabaka & Takım Seçimi</h6>
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <label asp-for="FixtureId" class="form-label fw-bold text-white mb-2">Maç <span class="text-danger">*</span></label>
+                    <select asp-for="FixtureId" asp-items="ViewBag.Fixtures" id="fixtureDropdown" class="form-select py-2.5 border-secondary bg-dark text-white shadow-sm">
+                        <option value="">— Maç seçin —</option>
+                    </select>
+                    <span asp-validation-for="FixtureId" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="TeamId" class="form-label fw-bold text-white mb-2">Olayın Yaşandığı Takım <span class="text-danger">*</span></label>
+                    <select asp-for="TeamId" id="teamDropdown" class="form-select py-2.5 border-secondary bg-dark text-white shadow-sm">
+                        <option value="">— Önce maç seçin —</option>
+                    </select>
+                    <span asp-validation-for="TeamId" class="text-danger small mt-1 d-block"></span>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-uppercase mb-3 text-warning" style="letter-spacing: 0.5px; font-size: 0.8rem;">2. Olay Parametreleri</h6>
+            <div class="row g-4 mb-4 align-items-end">
+                <div class="col-md-5">
+                    <label asp-for="PlayerName" class="form-label fw-bold text-white mb-2">Oyuncu Adı <span class="text-danger">*</span></label>
+                    <input asp-for="PlayerName" type="text" placeholder="örn. Erling Haaland" class="form-control py-2.5 border-secondary bg-dark text-white" />
+                    <span asp-validation-for="PlayerName" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="EventType" class="form-label fw-bold text-white mb-2">Olay Tipi <span class="text-danger">*</span></label>
+                    <select asp-for="EventType" id="eventTypeSelect" class="form-select py-2.5 border-secondary bg-dark text-white">
+                        <option value="">— Seçin —</option>
+                        <option value="0">Gol</option>
+                        <option value="1">Asist</option>
+                        <option value="2">Sarı Kart</option>
+                        <option value="3">Kırmızı Kart</option>
+                        <option value="4">İkinci Sarıdan Kırmızı</option>
+                        <option value="5">Oyuncu Değişikliği (Giren)</option>
+                        <option value="6">Oyuncu Değişikliği (Çıkan)</option>
+                        <option value="7">Penaltı Golü</option>
+                        <option value="8">Kaçan Penaltı</option>
+                        <option value="9">Sakatlık</option>
+                    </select>
+                    <span asp-validation-for="EventType" class="text-danger small mt-1 d-block"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Minute" class="form-label fw-bold text-white mb-2">Dakika <span class="text-danger">*</span></label>
+                    <div class="input-group shadow-sm">
+                        <input asp-for="Minute" type="number" min="1" max="130" placeholder="45" class="form-control py-2.5 border-secondary bg-dark text-white text-center fw-bold" />
+                        <span class="input-group-text bg-secondary bg-opacity-25 border-secondary text-white">'</span>
+                    </div>
+                    <span asp-validation-for="Minute" class="text-danger small mt-1 d-block"></span>
+                </div>
+            </div>
+
+            <!-- JİLET GİBİ "EK SÜRE" BİLGİ KUTUSU (Senin istediğin o mantık) -->
+            <div class="p-3.5 rounded-3 mb-5 border border-info border-opacity-25 d-flex align-items-center gap-3" style="background-color: rgba(0, 229, 255, 0.05);">
+                <i class="bi bi-info-circle-fill text-info fs-4 flex-shrink-0"></i>
+                <span class="small" style="color: #cbd5e1; line-height: 1.4;">
+                    <strong class="text-info fw-bold">Ek Süre Kuralı:</strong> İlk yarı veya maç sonu uzatma dakikalarını <code class="text-white bg-dark px-2 py-0.5 rounded border border-secondary border-opacity-50">90+</code> / <code class="text-white bg-dark px-2 py-0.5 rounded border border-secondary border-opacity-50">45+</code> şeklinde toplayarak direkt yazın. <em>(Örn: 45+3 için <strong>48</strong>, 90+6 için <strong>96</strong> giriniz).</em>
+                </span>
+            </div>
+
+            <div class="mb-5">
+                <label asp-for="EventDescription" class="form-label fw-bold text-white mb-2">Açıklama <span class="fw-normal" style="color: #64748b;">(Opsiyonel)</span></label>
+                <textarea asp-for="EventDescription" placeholder="Değişikliğe dahil olan diğer oyuncu veya pozisyon detayı..." class="form-control py-3 border-secondary bg-dark text-white" rows="2"></textarea>
+                <span asp-validation-for="EventDescription" class="text-danger small mt-1 d-block"></span>
+            </div>
+
+            <!-- Canlı Önizleme Alanı -->
+            <div id="eventPreview" class="p-4 rounded-3 border border-warning border-opacity-25 mb-5 shadow-sm" style="display:none; background-color: rgba(251, 191, 36, 0.04);">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="small text-uppercase fw-bold text-warning" style="letter-spacing: 1px;">Kayıt Önizlemesi</span>
+                    <span class="spinner-grow spinner-grow-sm text-warning" role="status" style="width: 10px; height: 10px;"></span>
+                </div>
+                <div id="previewContent" class="fs-5 fw-bold text-white d-flex align-items-center gap-2.5"></div>
+            </div>
+
+            <!-- Butonlar -->
+            <div class="d-flex justify-content-end gap-3 pt-4 border-top border-secondary border-opacity-25">
+                <a href="/Admin/Dashboard" class="btn btn-outline-light px-4 py-2 fw-medium">İptal</a>
+                <button type="submit" class="btn btn-warning px-5 py-2 fw-bold text-dark shadow-sm">
+                    <i class="bi bi-check2-all me-1.5 fs-5 align-middle"></i> Olayı Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        const eventTypeSelect = document.getElementById('eventTypeSelect');
+        const eventPreview = document.getElementById('eventPreview');
+        const previewContent = document.getElementById('previewContent');
+
+        const eventData = {
+            '0': { text: 'Gol', icon: 'bi-circle-fill text-success' },
+            '1': { text: 'Asist', icon: 'bi-box-arrow-in-right text-info' },
+            '2': { text: 'Sarı Kart', icon: 'bi-square-fill text-warning' },
+            '3': { text: 'Kırmızı Kart', icon: 'bi-square-fill text-danger' },
+            '4': { text: 'Çift Sarıdan Kırmızı', icon: 'bi-copy text-danger' },
+            '5': { text: 'Oyuna Giren', icon: 'bi-arrow-right-circle-fill text-success' },
+            '6': { text: 'Oyundan Çıkan', icon: 'bi-arrow-left-circle-fill text-danger' },
+            '7': { text: 'Penaltı Golü', icon: 'bi-record-circle text-success' },
+            '8': { text: 'Kaçan Penaltı', icon: 'bi-x-circle text-danger' },
+            '9': { text: 'Sakatlık', icon: 'bi-bandaid text-danger' }
+        };
+
+        eventTypeSelect.addEventListener('change', updatePreview);
+
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        });
+
+        function updatePreview() {
+            const player = document.querySelector('[name="PlayerName"]').value;
+            const minute = document.querySelector('[name="Minute"]').value;
+            const type = eventTypeSelect.value;
+
+            if (player && minute && type) {
+                eventPreview.style.display = 'block';
+                const eventInfo = eventData[type];
+                previewContent.innerHTML = `<i class="bi ${eventInfo.icon}"></i> <span>${player} (${eventInfo.text}) <span class="text-muted fw-normal">|</span> ${minute}'</span>`;
+            } else {
+                eventPreview.style.display = 'none';
+            }
+        }
+
+        document.getElementById("fixtureDropdown").addEventListener("change", function () {
+            var fixtureId = this.value;
+            if (!fixtureId) return;
+
+            fetch(`/Admin/GetFixtureTeams?fixtureId=${fixtureId}`)
+                .then(res => res.json())
+                .then(data => {
+                    var teamDropdown = document.getElementById("teamDropdown");
+                    teamDropdown.innerHTML = "<option value=''>— Takım seçin —</option>";
+                    teamDropdown.appendChild(new Option(data.homeTeamName, data.homeTeamId));
+                    teamDropdown.appendChild(new Option(data.awayTeamName, data.awayTeamId));
+                });
+        });
+    </script>
+}

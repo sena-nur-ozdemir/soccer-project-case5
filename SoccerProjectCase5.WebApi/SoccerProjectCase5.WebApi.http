@@ -1,0 +1,6 @@
+@SoccerProjectCase5.WebApi_HostAddress = http://localhost:5073
+
+GET {{SoccerProjectCase5.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,107 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Genel Durum";
+    ViewData["ActivePage"] = "Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mb-4">
+    <h3 class="fw-bold mb-1 text-white">Sistem Özet Raporu</h3>
+    <p class="small" style="color: #94a3b8;">GoalZone Premier Lig veritabanının anlık durum analizi</p>
+</div>
+
+<!-- 4'LÜ ZARİF VE YÜKSEK KONTRASTLI KART MİMARİSİ -->
+<div class="row g-4 mb-5">
+    <div class="col-xl-3 col-sm-6">
+        <div class="admin-card border border-secondary border-opacity-25 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-uppercase" style="color: #94a3b8; letter-spacing: 0.5px;">Kayıtlı Maç</span>
+                <div class="bg-info bg-opacity-10 text-info rounded p-2 d-flex"><i class="bi bi-trophy fs-5"></i></div>
+            </div>
+            <h2 class="fw-bold mb-1 text-info">@Model.TotalFixture</h2>
+            <span class="text-info small fw-medium"><i class="bi bi-check2-circle me-1"></i>Fikstür aktif</span>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+        <div class="admin-card border border-secondary border-opacity-25 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-uppercase" style="color: #94a3b8; letter-spacing: 0.5px;">İşlenen Olay</span>
+                <div class="bg-warning bg-opacity-10 text-warning rounded p-2 d-flex"><i class="bi bi-activity fs-5"></i></div>
+            </div>
+            <h2 class="fw-bold mb-1 text-warning">@Model.TotalMatchEvent</h2>
+            <span class="small" style="color: #64748b;">Gol, Kart, Değişiklik</span>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+        <div class="admin-card border border-secondary border-opacity-25 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-uppercase" style="color: #94a3b8; letter-spacing: 0.5px;">Maç İstatistiği</span>
+                <div class="bg-success bg-opacity-10 text-success rounded p-2 d-flex"><i class="bi bi-bar-chart fs-5"></i></div>
+            </div>
+            <h2 class="fw-bold mb-1 text-success">@Model.TotalMatchStatistic</h2>
+            <span class="small" style="color: #64748b;">Detaylı analizler</span>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+        <div class="admin-card border border-secondary border-opacity-25 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-uppercase" style="color: #94a3b8; letter-spacing: 0.5px;">Aktif Takım</span>
+                <div class="bg-danger bg-opacity-10 text-danger rounded p-2 d-flex"><i class="bi bi-shield fs-5"></i></div>
+            </div>
+            <h2 class="fw-bold mb-1 text-danger">20</h2>
+            <span class="small" style="color: #64748b;">Premier Lig ekibi</span>
+        </div>
+    </div>
+</div>
+
+<!-- HIZLI İŞLEMLER KUTULARI -->
+<div class="admin-card border border-secondary border-opacity-25 shadow-sm">
+    <h5 class="fw-bold mb-4 text-white"><i class="bi bi-terminal me-2 text-info"></i>Hızlı Veri Giriş Noktaları</h5>
+
+    <div class="row g-4">
+        <!-- 1. KUTU: Fikstür Ekle (Artık outline-info, mouse gelince dolacak) -->
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary border-opacity-25 rounded-3 h-100 d-flex flex-column justify-content-between" style="background-color: #0b1120;">
+                <div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-plus-square text-info fs-4"></i>
+                        <h6 class="fw-bold m-0 text-white">Yeni Maç / Fikstür</h6>
+                    </div>
+                    <p class="small mb-4" style="color: #94a3b8;">Sisteme yeni bir müsabaka, stadyum, tarih ve maç sonu skoru tanımlayın.</p>
+                </div>
+                <a href="/Admin/CreateFixture" class="btn btn-outline-info w-100 btn-sm fw-bold py-2">Fikstür Ekle <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+
+        <!-- 2. KUTU: Olay Ekle -->
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary border-opacity-25 rounded-3 h-100 d-flex flex-column justify-content-between" style="background-color: #0b1120;">
+                <div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-lightning-charge text-warning fs-4"></i>
+                        <h6 class="fw-bold m-0 text-white">Maç Olayı İşle</h6>
+                    </div>
+                    <p class="small mb-4" style="color: #94a3b8;">Oynanan bir maça ait golleri, sarı/kırmızı kartları ve dakikalarını girin.</p>
+                </div>
+                <a href="/Admin/CreateMatchEvent" class="btn btn-outline-warning w-100 btn-sm fw-bold py-2">Olay Ekle <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+
+        <!-- 3. KUTU: İstatistik Raporla -->
+        <div class="col-md-4">
+            <div class="p-4 border border-secondary border-opacity-25 rounded-3 h-100 d-flex flex-column justify-content-between" style="background-color: #0b1120;">
+                <div>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <i class="bi bi-graph-up text-success fs-4"></i>
+                        <h6 class="fw-bold m-0 text-white">İstatistik Raporla</h6>
+                    </div>
+                    <p class="small mb-4" style="color: #94a3b8;">Topla oynama yüzdeleri, isabetli şutlar, pas ve korner sayılarını sisteme enjekte edin.</p>
+                </div>
+                <a href="/Admin/CreateMatchStatistics" class="btn btn-outline-success w-100 btn-sm fw-bold py-2">İstatistik Gir <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
